@@ -18,6 +18,10 @@ var Routing = {
 			segments = segments.replace(":"+prop, options[prop]);
 		}
 
+    if (options['format'] && options['format'] != "") {
+      segments = segments + "." + options['format']
+    }
+
 		var query="";
 		if (extras) {
 			query += "?"
@@ -47,7 +51,7 @@ var Routing = {
                 var options = {
                         <%= route.significant_keys.collect { |key| "#{key}: '#{route.defaults[key]}'" }.join(",\n\t\t\t") %>
                 };
-                return Routing.get_path("<%= route.segments.collect(&:to_s) %>", options, overrides);
+                return Routing.get_path("<%= route.segments.collect {|s| s.to_s == "(.:format)?" ? "" : s.to_s } %>", options, overrides);
         },
 
 <% end -%>
